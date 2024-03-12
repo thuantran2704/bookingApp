@@ -1,24 +1,23 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
 
-app.use(express.json());
+
+const origin = 'http://localhost:5173';
 
 app.use(cors({
     credentials: true,
-    origin: 'http://127.0.0.1:5173/',
-
+    origin: origin,
 }));
 
 app.get('/test', (req,res)=> {
     res.json('test good');
+    console.log('test ok');
 });
 
 app.post('/register', (req,res) => {
-    const {name, email, password, } = req.body;
+    const {name, email, password } = req.body;
     res.json({name,email,password});
 })
-
 
 
 app.listen(4000);

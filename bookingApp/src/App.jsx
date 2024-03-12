@@ -7,6 +7,9 @@ import RegisterPage from './pages/RegisterPage.jsx';
 import axios from 'axios';
 
 
+//axios base setup
+axios.defaults.baseURL = 'http://localhost:4000/';
+
 
 
 function App() {
@@ -21,9 +24,6 @@ function App() {
     </Routes>
   )
 }
-
-//axios base setup
-axios.defaults.baseURL = 'http://localhost:4000';
 
 
 export default App
