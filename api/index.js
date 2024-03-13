@@ -1,7 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-
+const mongoose = require("mongoose");
+const dotenv = require('dotenv');
 const app = express();
+
+dotenv.config();
+
+app.use(express.json())
 
 const origin = 'http://localhost:5173';
 
@@ -10,13 +15,11 @@ app.use(cors({
     origin: origin
 }));
 
-try{
+mongoose.connect(process.env.MONGO_URL);
+
 app.get('/test', (req,res)=> {
     res.json('test good');
-    console.log('test ok');
-});} catch(error){
-    console.log(error);
-}
+});
 
 app.post('/register', (req,res) => {
     const {name, email, password } = req.body;
