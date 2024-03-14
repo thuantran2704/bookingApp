@@ -17,7 +17,7 @@ const origin = 'http://localhost:5173';
 
 const  salt = bcrypt.genSaltSync(10);
 
-const jwtSecret = 'JT1qnpNpJe';
+const jwtSecret = 'jt1qnpnpje';
 
 app.use(cors({
     credentials: true,
@@ -47,21 +47,21 @@ app.post('/register', async (req,res) => {
 
 app.post('/login', async (req,res) =>{
     const {email, password} = req.body;
-    const userDocument = await User.findOne({email: email});
+    const userDocument = await User.findOne({email});
     if(userDocument){
         const accepted = bcrypt.compareSync(password, userDocument.password);
         if(accepted){
-            jwt.sign({email: userDocument.email, id:userDocument._id}, jtwSecret, {}, (err, token) => {
+            jwt.sign({email: userDocument.email, id:userDocument._id}, jwtSecret, {}, (err, token) => {
                 if(err) throw err;
                 res.cookie('token', token).json('login successfully');
-            })
-            res.cookie('token', '').json('Went through');
-        }
+            });
     } else {
-        alert('Password or Account incorrect');
         res.status(422).json('Wrong Password');
+    } 
+} else {
+        res.json('not found');
     }
-})
+});
 
 
 app.listen(4000);
