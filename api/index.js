@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const User = require('./models/user.js');
 const bcrypt = require('bcryptjs');
-
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -19,6 +19,7 @@ const  salt = bcrypt.genSaltSync(10);
 
 const jwtSecret = 'jt1qnpnpje';
 
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: origin
@@ -51,7 +52,10 @@ app.post('/login', async (req,res) =>{
     if(userDocument){
         const accepted = bcrypt.compareSync(password, userDocument.password);
         if(accepted){
-            jwt.sign({email: userDocument.email, id:userDocument._id}, jwtSecret, {}, (err, token) => {
+            jwt.sign({email: userDocument.email, 
+                d:userDocument._id, 
+                ame: userDocument.name}, 
+                jwtSecret, {}, (err, token) => {
                 if(err) throw err;
                 res.cookie('token', token).json(userDocument);
             });
@@ -63,5 +67,16 @@ app.post('/login', async (req,res) =>{
     }
 });
 
-
+app.get('/profile', (req, res) => {
+    const {token} = req.cookies;
+    if(token){
+        jwt.verify(token, jwtSecret, {}, async (err, user) => {
+            if(err) throw err;
+            const {name, email, _id} = await User.findById(user.id);
+            res.json(name, email, _id);
+        });
+    } else {
+    res.json(null);
+    }
+})
 app.listen(4000);

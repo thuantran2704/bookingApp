@@ -10,8 +10,8 @@ export default function LoginPage(){
     async function handleLogin(ev){
         ev.preventDefault();
         try{
-            const user = await axios.post('/login',{email,password});
-            setUser(user);
+            const {data} = await axios.post('/login',{email,password});
+            setUser(data);
             alert('Login succesful');
             setRedirect(true);
         } catch(e) {
